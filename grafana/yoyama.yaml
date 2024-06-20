@@ -1,0 +1,174 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"env":"visuals"},"name":"grafana","namespace":"default"},"spec":{"selector":{"matchLabels":{"env":"visuals"}},"template":{"metadata":{"labels":{"env":"visuals"},"name":"grafana"},"spec":{"containers":[{"image":"grafana/grafana","name":"grafana","ports":[{"containerPort":3000}],"volumeMounts":[{"mountPath":"/var/lib/grafana/","name":"grafana-persistent-storage-store"},{"mountPath":"/etc/grafana/provisioning/datasources/datasource.yaml","name":"grafana-script","subPath":"datasource.yaml"}]}],"volumes":[{"name":"grafana-persistent-storage-store","persistentVolumeClaim":{"claimName":"grafana-storage-pvc"}},{"configMap":{"name":"grafana-config"},"name":"grafana-script"}]}}}}
+    creationTimestamp: "2024-06-20T11:03:59Z"
+    generation: 2
+    labels:
+      env: visuals
+    name: grafana
+    namespace: default
+    resourceVersion: "2243"
+    uid: dbaecb62-d6f5-4c38-9395-aa6a4794784b
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        env: visuals
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2024-06-20T12:21:55+01:00"
+        creationTimestamp: null
+        labels:
+          env: visuals
+        name: grafana
+      spec:
+        containers:
+        - image: grafana/grafana
+          imagePullPolicy: Always
+          name: grafana
+          ports:
+          - containerPort: 3000
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/grafana/
+            name: grafana-persistent-storage-store
+          - mountPath: /etc/grafana/provisioning/datasources/datasource.yaml
+            name: grafana-script
+            subPath: datasource.yaml
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: grafana-persistent-storage-store
+          persistentVolumeClaim:
+            claimName: grafana-storage-pvc
+        - configMap:
+            defaultMode: 420
+            name: grafana-config
+          name: grafana-script
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2024-06-20T11:04:54Z"
+      lastUpdateTime: "2024-06-20T11:04:54Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2024-06-20T11:04:00Z"
+      lastUpdateTime: "2024-06-20T11:22:05Z"
+      message: ReplicaSet "grafana-c878b6d88" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"env":"metrics"},"name":"prometheus","namespace":"default"},"spec":{"selector":{"matchLabels":{"env":"metrics"}},"template":{"metadata":{"labels":{"env":"metrics"},"name":"prometheus"},"spec":{"containers":[{"args":["--config.file=/prometheus.yml","--storage.tsdb.path='prometheus_data/"],"image":"prom/prometheus","name":"prom","ports":[{"containerPort":9090}],"volumeMounts":[{"mountPath":"prometheus_data/","name":"prometheus-persistent-storage-store"},{"mountPath":"/prometheus.yml","name":"prometheus-script","subPath":"prometheus.yml"}]}],"volumes":[{"name":"prometheus-persistent-storage-store","persistentVolumeClaim":{"claimName":"prom-storage-pvc"}},{"configMap":{"name":"prom-config"},"name":"prometheus-script"}]}}}}
+    creationTimestamp: "2024-06-20T10:47:08Z"
+    generation: 1
+    labels:
+      env: metrics
+    name: prometheus
+    namespace: default
+    resourceVersion: "549"
+    uid: 20019256-825a-4920-953a-0b236ca54f17
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        env: metrics
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          env: metrics
+        name: prometheus
+      spec:
+        containers:
+        - args:
+          - --config.file=/prometheus.yml
+          - --storage.tsdb.path='prometheus_data/
+          image: prom/prometheus
+          imagePullPolicy: Always
+          name: prom
+          ports:
+          - containerPort: 9090
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: prometheus_data/
+            name: prometheus-persistent-storage-store
+          - mountPath: /prometheus.yml
+            name: prometheus-script
+            subPath: prometheus.yml
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: prometheus-persistent-storage-store
+          persistentVolumeClaim:
+            claimName: prom-storage-pvc
+        - configMap:
+            defaultMode: 420
+            name: prom-config
+          name: prometheus-script
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2024-06-20T10:47:50Z"
+      lastUpdateTime: "2024-06-20T10:47:50Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2024-06-20T10:47:08Z"
+      lastUpdateTime: "2024-06-20T10:47:50Z"
+      message: ReplicaSet "prometheus-f799b4c87" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
